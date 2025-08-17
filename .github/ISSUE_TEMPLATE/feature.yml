@@ -1,7 +1,7 @@
 name: ✨ Feature Request
 description: 새로운 기능 개발 이슈
 title: "[Feature] "
-labels: ["feature"]
+labels: ["feature ✨"]
 body:
   - type: textarea
     id: summary

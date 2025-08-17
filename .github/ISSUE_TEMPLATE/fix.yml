@@ -1,7 +1,7 @@
 name: 🐛 Bug Report
 description: 버그 리포트
 title: "[Fix] "
-labels: ["fix"]
+labels: ["bug 🐛"]
 body:
   - type: textarea
     id: summary

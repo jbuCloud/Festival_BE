@@ -1,7 +1,7 @@
 name: ♻️ Refactor
 description: 코드 리팩토링 작업
 title: "[Refactor] "
-labels: ["refactor"]
+labels: ["refactor ♻️"]
 body:
   - type: textarea
     id: target
