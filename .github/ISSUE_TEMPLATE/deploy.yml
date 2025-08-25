@@ -4,28 +4,39 @@ title: "[Deploy] "
 labels: ["deploy 🚀"]
 body:
   - type: input
-    id: version
+    id: branch
     attributes:
-      label: 📌 배포 버전
-      placeholder: ex) v1.0.0
+      label: 🌿 대상 브랜치
+      placeholder: ex) main, develop
     validations:
       required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: 🏷️ 배포 환경
+      placeholder: ex) dev, prod
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 📌 배포 버전 (선택)
+      placeholder: ex) v1.0.0
+
   - type: textarea
     id: summary
     attributes:
       label: 📝 변경 사항 요약
-      description: 이번 배포에 포함된 주요 변경점을 적어주세요.
       placeholder: ex) 회원가입 기능 추가 (#12), 로그인 에러 수정 (#34)
-  - type: input
-    id: date
-    attributes:
-      label: 📅 배포 일시
-      placeholder: ex) 2025-08-17 18:00
+    validations:
+      required: true
+
   - type: textarea
     id: checklist
     attributes:
       label: ✅ 체크리스트
-      description: 배포 전에 확인해야 할 사항
       placeholder: |
         - [ ] CI/CD 통과 확인
         - [ ] 환경 변수 최신화
