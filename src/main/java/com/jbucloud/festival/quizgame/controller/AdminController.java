@@ -3,6 +3,7 @@ package com.jbucloud.festival.quizgame.controller;
 import com.jbucloud.festival.quizgame.domain.GameType;
 import com.jbucloud.festival.quizgame.domain.Question;
 import com.jbucloud.festival.quizgame.repository.QuestionRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "퀴즈 데이터 관리", description = "운영에서는 비활성화")
 @Profile("dev")
 @Controller
 @RequiredArgsConstructor
