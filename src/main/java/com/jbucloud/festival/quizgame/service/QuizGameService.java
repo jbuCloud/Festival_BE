@@ -32,7 +32,7 @@ public class QuizGameService {
 
     @Transactional
     public GameDto.StartResponse startGame(GameType gameType) {
-        List<Question> questionsForGame = new ArrayList<>(questionRepository.findRandomQuestions(gameType.name(),30));
+        List<Question> questionsForGame = new ArrayList<>(questionRepository.findRandomQuestions(gameType.name(),30)); //30개 추출
         if (questionsForGame.isEmpty()) {
             throw new IllegalArgumentException("Invalid game type or no questions available: " + gameType);
         }
