@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>퀴즈 관리자 페이지</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .tabs { display: flex; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem; overflow: hidden; }
+        .tab { flex: 1; padding: 1rem; text-align: center; cursor: pointer; background: white; border: none; font-size: 1rem; transition: all 0.3s ease; }
+        .tab:hover { background: #f8f9fa; }
+        .tab.active { background: #667eea; color: white; }
+        .tab-content { display: none; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 2px solid #e1e5e9; border-radius: 5px; font-size: 1rem; transition: border-color 0.3s ease; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .choices-container { border: 2px dashed #e1e5e9; padding: 1rem; border-radius: 5px; margin-top: 0.5rem; }
+        .choice-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .choice-item input { flex: 1; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%); color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-small { padding: 0.5rem 1rem; font-size: 0.9rem; }
+        .questions-list { max-height: 600px; overflow-y: auto; }
+        .question-item { background: #f8f9fa; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; border-left: 4px solid #667eea; }
+        .question-item h4 { color: #667eea; margin-bottom: 0.5rem; }
+        .question-item .game-type { background: #667eea; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
+        .choices-display { margin: 0.5rem 0; }
+        .choice-display { padding: 0.3rem 0.8rem; margin: 0.2rem 0; background: white; border-radius: 5px; border: 1px solid #e1e5e9; }
+        .choice-display.correct { background: #d4edda; border-color: #c3e6cb; font-weight: bold; }
+        .question-actions { margin-top: 1rem; }
+        .loading { text-align: center; padding: 2rem; color: #667eea; }
+        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
+        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .alert-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .alert-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .filter-controls { margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; }
+        .filter-controls select { padding: 0.5rem; border: 2px solid #e1e5e9; border-radius: 5px; }
+        .muted { color: #6c757d; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>퀴즈 관리자 페이지</h1>
+        <p>우리 구름톤 유니브 정상 영업합니다..</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('create')">퀴즈 생성</button>
+        <button class="tab" onclick="switchTab('list')">퀴즈 목록</button>
+    </div>
+
+    <!-- 퀴즈 생성 탭 -->
+    <div id="create-tab" class="tab-content active">
+        <h2>새 퀴즈 생성</h2>
+        <div id="create-alert"></div>
+        <form id="quiz-form">
+            <div class="form-group">
+                <label for="gameType">게임 타입</label>
+                <!-- SUBJECTIVE 제거, 단순 카테고리만 선택 -->
+                <select id="gameType" name="gameType" required>
+                    <option value="">게임 타입을 선택하세요</option>
+                    <option value="DADJOKE">아재개그</option>
+                    <option value="CAMPUS">학교학과</option>
+                    <option value="TTS">TTS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="stem">문제</label>
+                <textarea id="stem" name="stem" placeholder="퀴즈 문제를 입력하세요" required></textarea>
+            </div>
+
+            <div class="form-group" id="choices-section">
+                <label>선택지 <span class="muted">(추가하지 않으면 주관식)</span></label>
+                <div class="choices-container">
+                    <div id="choices-list"><!-- 기본 0개 --></div>
+                    <button type="button" class="btn btn-success btn-small" onclick="addChoice()">선택지 추가</button>
+                </div>
+            </div>
+
+            <div class="form-group" id="correct-answer-section">
+                <label for="correctAnswer">정답</label>
+                <input type="text" id="correctAnswer" name="correctAnswer" placeholder="정답 내용을 입력하세요" required>
+                <small id="answer-help" style="color: #666; font-size: 0.9em; margin-top: 0.5rem; display: block;">
+                    선택지가 없으면 주관식입니다. 정답 내용을 입력하세요.
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">퀴즈 생성</button>
+            <button type="button" class="btn btn-secondary" onclick="resetForm()">초기화</button>
+        </form>
+    </div>
+
+    <!-- 퀴즈 목록 탭 -->
+    <div id="list-tab" class="tab-content">
+        <h2>퀴즈 목록</h2>
+        <div id="list-alert"></div>
+        <div class="filter-controls">
+            <label for="filterGameType">게임 타입 필터:</label>
+            <select id="filterGameType" onchange="loadQuestions()">
+                <option value="">전체</option>
+                <option value="DADJOKE">아재개그</option>
+                <option value="CAMPUS">학교학과</option>
+                <option value="TTS">TTS</option>
+            </select>
+            <button class="btn btn-primary btn-small" onclick="loadQuestions()">새로고침</button>
+        </div>
+        <div id="questions-container">
+            <div class="loading">퀴즈 목록을 불러오는 중...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let questions = [];
+    let currentEditingId = null;
+
+    // 정답 도움말/placeholder 업데이트 (선택지 개수 기준)
+    function updateAnswerHelp() {
+        const choicesCount = document.querySelectorAll('#choices-list .choice-item').length;
+        const help = document.getElementById('answer-help');
+        const input = document.getElementById('correctAnswer');
+        if (choicesCount === 0) {
+            help.textContent = '선택지가 없으면 주관식입니다. 정답 내용을 입력하세요.';
+            input.placeholder = '정답 내용을 입력하세요';
+        } else {
+            help.textContent = `선택지가 ${choicesCount}개입니다. 객관식 정답 번호를 입력하세요 (1~${choicesCount}).`;
+            input.placeholder = `정답 번호 (1~${choicesCount})`;
+        }
+    }
+
+    // 탭 전환
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(tabName + '-tab').classList.add('active');
+        if (tabName === 'list') loadQuestions();
+    }
+
+    // 선택지 추가 (기본 0개에서 시작)
+    function addChoice() {
+        const choicesList = document.getElementById('choices-list');
+        const choiceItem = document.createElement('div');
+        choiceItem.className = 'choice-item';
+        choiceItem.innerHTML = `
+                <input type="text" placeholder="선택지 내용" class="choice-label" required>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeChoice(this)">삭제</button>
+            `;
+        choicesList.appendChild(choiceItem);
+        updateAnswerHelp();
+    }
+
+    // 선택지 삭제 (최소 개수 제한 제거, 0개 허용)
+    function removeChoice(button) {
+        button.parentElement.remove();
+        updateAnswerHelp();
+    }
+
+    // 폼 초기화
+    function resetForm() {
+        document.getElementById('quiz-form').reset();
+        const choicesList = document.getElementById('choices-list');
+        choicesList.innerHTML = '';
+        currentEditingId = null;
+        document.querySelector('#create-tab h2').textContent = '새 퀴즈 생성';
+        document.querySelector('button[type="submit"]').textContent = '퀴즈 생성';
+        updateAnswerHelp();
+    }
+
+    // 알림 표시
+    function showAlert(containerId, message, type) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        setTimeout(() => { container.innerHTML = ''; }, 3000);
+    }
+
+    // 게임 타입 한글 변환 (구 주관식 호환용 키는 유지)
+    function getGameTypeLabel(gameType) {
+        const labels = { 'DADJOKE': '아재개그', 'CAMPUS': '학교학과', 'TTS': 'TTS', 'SUBJECTIVE': '주관식(구)' };
+        return labels[gameType] || gameType;
+    }
+
+    // 퀴즈 목록 로드
+    async function loadQuestions() {
+        const container = document.getElementById('questions-container');
+        const filterGameType = document.getElementById('filterGameType').value;
+        try {
+            container.innerHTML = '<div class="loading">퀴즈 목록을 불러오는 중...</div>';
+            let url = '/admin/api/questions';
+            if (filterGameType) url += `/${filterGameType}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('퀴즈 목록을 불러올 수 없습니다.');
+            questions = await response.json();
+            displayQuestions(questions);
+        } catch (error) {
+            container.innerHTML = `<div class="alert alert-error">오류가 발생했습니다: ${error.message}</div>`;
+        }
+    }
+
+    // 퀴즈 목록 표시 (선택지 유무로 주/객관식 판단)
+    function displayQuestions(questionList) {
+        const container = document.getElementById('questions-container');
+        if (questionList.length === 0) {
+            container.innerHTML = '<div class="alert alert-info">등록된 퀴즈가 없습니다.</div>';
+            return;
+        }
+        container.innerHTML = questionList.map(question => {
+            const isObjective = question.choices && question.choices.length > 0;
+            let choicesHtml = '';
+            if (isObjective) {
+                choicesHtml = `
+                        <div class="choices-display">
+                            <strong>선택지:</strong>
+                            ${question.choices.map(choice => `
+                                <div class="choice-display ${String(choice.choiceId) === String(question.correctAnswer) ? 'correct' : ''}">
+                                    ${choice.choiceId}: ${choice.label} ${String(choice.choiceId) === String(question.correctAnswer) ? '(정답)' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+            } else {
+                choicesHtml = `
+                        <div class="choices-display">
+                            <strong>정답:</strong> <span style="background: #d4edda; padding: 0.3rem 0.8rem; border-radius: 5px; font-weight: bold;">${question.correctAnswer}</span>
+                            <span class="muted">(주관식)</span>
+                        </div>
+                    `;
+            }
+            return `
+                    <div class="question-item">
+                        <div class="game-type">${getGameTypeLabel(question.gameType)}</div>
+                        <h4>문제 #${question.id}</h4>
+                        <p><strong>내용:</strong> ${question.stem}</p>
+                        ${choicesHtml}
+                        <div class="question-actions">
+                            <button class="btn btn-primary btn-small" onclick="editQuestion(${question.id})">수정</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteQuestion(${question.id})">삭제</button>
+                        </div>
+                    </div>
+                `;
+        }).join('');
+    }
+
+    // 퀴즈 수정 (선택지 유무로 주/객관식 판단)
+    function editQuestion(id) {
+        const question = questions.find(q => q.id === id);
+        if (!question) return;
+        currentEditingId = id;
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelector('[onclick="switchTab(\'create\')"]').classList.add('active');
+        document.getElementById('create-tab').classList.add('active');
+        document.getElementById('gameType').value = question.gameType;
+        document.getElementById('stem').value = question.stem;
+        document.getElementById('correctAnswer').value = question.correctAnswer;
+        const choicesList = document.getElementById('choices-list');
+        if (question.choices && question.choices.length > 0) {
+            choicesList.innerHTML = question.choices.map(choice => `
+                    <div class="choice-item">
+                        <input type="text" placeholder="선택지 내용" class="choice-label" value="${choice.label}" required>
+                        <button type="button" class="btn btn-danger btn-small" onclick="removeChoice(this)">삭제</button>
+                    </div>
+                `).join('');
+        } else {
+            choicesList.innerHTML = '';
+        }
+        document.querySelector('#create-tab h2').textContent = '퀴즈 수정';
+        document.querySelector('button[type="submit"]').textContent = '퀴즈 수정';
+        updateAnswerHelp();
+    }
+
+    // 퀴즈 삭제
+    async function deleteQuestion(id) {
+        if (!confirm('정말로 이 퀴즈를 삭제하시겠습니까?')) return;
+        try {
+            const response = await fetch(`/admin/api/questions/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('퀴즈 삭제에 실패했습니다.');
+            showAlert('list-alert', '퀴즈가 삭제되었습니다.', 'success');
+            loadQuestions();
+        } catch (error) {
+            showAlert('list-alert', `오류가 발생했습니다: ${error.message}`, 'error');
+        }
+    }
+
+    // 폼 제출 처리
+    document.getElementById('quiz-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const gameType = formData.get('gameType');
+        const stem = formData.get('stem');
+        const correctAnswer = formData.get('correctAnswer');
+        const choiceInputs = Array.from(document.querySelectorAll('.choice-label'));
+        const isObjective = choiceInputs.length > 0; // 선택지가 있으면 객관식
+        let choices = [];
+
+        if (isObjective) {
+            const labels = choiceInputs.map(input => input.value.trim());
+            if (labels.some(label => !label)) {
+                showAlert('create-alert', '모든 선택지를 입력해주세요.', 'error');
+                return;
+            }
+            choices = labels.map((label, index) => ({ choiceId: String(index + 1), label }));
+            const answerNumber = parseInt(correctAnswer, 10);
+            if (Number.isNaN(answerNumber) || answerNumber < 1 || answerNumber > choices.length) {
+                showAlert('create-alert', `정답은 1부터 ${choices.length}까지의 번호여야 합니다.`, 'error');
+                return;
+            }
+        } else {
+            choices = [];
+            if (!correctAnswer.trim()) {
+                showAlert('create-alert', '주관식 정답을 입력해주세요.', 'error');
+                return;
+            }
+        }
+
+        const questionData = { gameType, stem, choices, correctAnswer };
+        try {
+            const url = currentEditingId ? `/admin/api/questions/${currentEditingId}` : '/admin/api/questions';
+            const method = currentEditingId ? 'PUT' : 'POST';
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(questionData)
+            });
+            if (!response.ok) throw new Error('퀴즈 저장에 실패했습니다.');
+            const message = currentEditingId ? '퀴즈가 수정되었습니다.' : '퀴즈가 생성되었습니다.';
+            showAlert('create-alert', message, 'success');
+            resetForm();
+            if (document.getElementById('list-tab').classList.contains('active')) loadQuestions();
+        } catch (error) {
+            showAlert('create-alert', `오류가 발생했습니다: ${error.message}`, 'error');
+        }
+    });
+
+    // 페이지 로드시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        updateAnswerHelp(); // 초기 도움말 설정
+    });
+</script>
+</body>
+</html>

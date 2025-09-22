@@ -13,4 +13,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = "SELECT * FROM question WHERE game_type = :gameType ORDER BY RAND() LIMIT :count",
             nativeQuery = true)
     List<Question> findRandomQuestions(@Param("gameType") String gameType, @Param("count") int count);
+    
+    List<Question> findByGameType(GameType gameType);
 }

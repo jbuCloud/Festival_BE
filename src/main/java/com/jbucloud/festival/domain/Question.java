@@ -29,7 +29,14 @@ public class Question {
     private List<Choice> choices = new ArrayList<>();
 
     private String correctAnswer; // 정답
-
+    
+    public void update(GameType gameType, String stem, List<Choice> choices, String correctAnswer) {
+        this.gameType = gameType;
+        this.stem = stem;
+        this.choices.clear();
+        this.choices.addAll(choices);
+        this.correctAnswer = correctAnswer;
+    }
 
     @Embeddable
     @Getter
