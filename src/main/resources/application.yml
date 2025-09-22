@@ -5,3 +5,6 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+firebase:
+  service-account-file: ${FIREBASE_SERVICE_ACCOUNT_FILE}

@@ -60,4 +60,11 @@ public class MemberService {
         member.setMajor(major);
         memberRepository.save(member);
     }
+
+    @Transactional(readOnly = true)
+    public String getMemberNickname(Long memberId) {
+        return memberRepository.findById(memberId)
+                .map(Member::getNickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 }

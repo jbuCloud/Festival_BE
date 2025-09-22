@@ -14,6 +14,7 @@ public class FestivalApplication {
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 		System.setProperty("KAKAO_REST_API_KEY", dotenv.get("KAKAO_REST_API_KEY"));
 		System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET"));
+		System.setProperty("FIREBASE_SERVICE_ACCOUNT_FILE", dotenv.get("FIREBASE_SERVICE_ACCOUNT_FILE"));
 
 		SpringApplication.run(FestivalApplication.class, args);
 	}

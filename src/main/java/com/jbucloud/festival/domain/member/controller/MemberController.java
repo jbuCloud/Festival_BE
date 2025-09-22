@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,5 +49,12 @@ public class MemberController {
             @RequestBody @Valid UpdateMajorRequestDto requestDto) {
         memberService.updateMajor(userDetails.getMember().getId(), requestDto.getMajor());
         return ResponseEntity.ok("전공 정보가 성공적으로 업데이트되었습니다.");
+    }
+
+    @Operation(summary = "현재 로그인한 회원의 닉네임 조회", description = "인증된 사용자의 닉네임을 조회합니다.")
+    @GetMapping("/nickname")
+    public ResponseEntity<String> getMyNickname(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String nickname = memberService.getMemberNickname(userDetails.getMember().getId());
+        return ResponseEntity.ok(nickname);
     }
 }
