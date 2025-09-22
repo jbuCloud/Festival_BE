@@ -1,6 +1,8 @@
 package com.jbucloud.festival.quizgame.service;
 
 
+import com.jbucloud.festival.global.exception.GeneralException;
+import com.jbucloud.festival.global.response.status.ErrorStatus;
 import com.jbucloud.festival.quizgame.domain.GameSession;
 import com.jbucloud.festival.quizgame.domain.GameType;
 import com.jbucloud.festival.quizgame.domain.Question;
@@ -34,7 +36,7 @@ public class QuizGameService {
     public GameDto.StartResponse startGame(GameType gameType) {
         List<Question> questionsForGame = new ArrayList<>(questionRepository.findRandomQuestions(gameType.name(),30)); //30개 추출
         if (questionsForGame.isEmpty()) {
-            throw new IllegalArgumentException("Invalid game type or no questions available: " + gameType);
+            throw new GeneralException(ErrorStatus.QUIZ_NOT_FOUND);
         }
 
         String submissionId = "s-" + UUID.randomUUID().toString().substring(0, 8);
@@ -77,7 +79,7 @@ public class QuizGameService {
         GameSession session = validateAndGetSession(submissionId, token);
 
         if (session.getStatus() == GameSession.SessionStatus.FINISHED) {
-            throw new IllegalStateException("This session has already been finished.");
+            throw new GeneralException(ErrorStatus.QUIZ_ALREADY_CLOSED);
         }
 
         int scorePerQuestion = 10;
