@@ -1,4 +1,4 @@
-package com.jbucloud.festival.domain;
+package com.jbucloud.festival.quizgame.domain;
 
 public enum GameType {
     DADJOKE, CAMPUS, TTS

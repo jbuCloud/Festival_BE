@@ -1,4 +1,4 @@
-package com.jbucloud.festival;
+package com.jbucloud.festival.common;
 
 
 import org.springframework.context.annotation.Bean;

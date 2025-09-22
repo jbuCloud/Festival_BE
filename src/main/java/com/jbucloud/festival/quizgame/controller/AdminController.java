@@ -1,18 +1,16 @@
-package com.jbucloud.festival.controller;
+package com.jbucloud.festival.quizgame.controller;
 
-import com.jbucloud.festival.domain.GameType;
-import com.jbucloud.festival.domain.Question;
-import com.jbucloud.festival.repository.QuestionRepository;
+import com.jbucloud.festival.quizgame.domain.GameType;
+import com.jbucloud.festival.quizgame.domain.Question;
+import com.jbucloud.festival.quizgame.repository.QuestionRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Profile("dev")

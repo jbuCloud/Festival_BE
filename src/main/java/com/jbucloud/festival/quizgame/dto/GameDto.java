@@ -1,7 +1,7 @@
-package com.jbucloud.festival.dto;
+package com.jbucloud.festival.quizgame.dto;
 
 
-import com.jbucloud.festival.domain.GameType;
+import com.jbucloud.festival.quizgame.domain.GameType;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.ZonedDateTime;
 import java.util.List;

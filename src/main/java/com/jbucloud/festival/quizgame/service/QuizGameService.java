@@ -1,12 +1,12 @@
-package com.jbucloud.festival.service;
+package com.jbucloud.festival.quizgame.service;
 
 
-import com.jbucloud.festival.domain.GameSession;
-import com.jbucloud.festival.domain.GameType;
-import com.jbucloud.festival.domain.Question;
-import com.jbucloud.festival.dto.GameDto;
-import com.jbucloud.festival.repository.GameSessionRepository;
-import com.jbucloud.festival.repository.QuestionRepository;
+import com.jbucloud.festival.quizgame.domain.GameSession;
+import com.jbucloud.festival.quizgame.domain.GameType;
+import com.jbucloud.festival.quizgame.domain.Question;
+import com.jbucloud.festival.quizgame.dto.GameDto;
+import com.jbucloud.festival.quizgame.repository.GameSessionRepository;
+import com.jbucloud.festival.quizgame.repository.QuestionRepository;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

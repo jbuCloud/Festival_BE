@@ -1,8 +1,8 @@
-package com.jbucloud.festival.controller;
+package com.jbucloud.festival.quizgame.controller;
 
 
-import com.jbucloud.festival.dto.GameDto;
-import com.jbucloud.festival.service.QuizGameService;
+import com.jbucloud.festival.quizgame.dto.GameDto;
+import com.jbucloud.festival.quizgame.service.QuizGameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
