@@ -7,11 +7,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Tag(name = "퀴즈 데이터 관리", description = "운영에서는 비활성화")
@@ -19,7 +26,13 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@Slf4j
 public class AdminController {
+
+    @Value("${firebase.service-account-file}")
+    private String serviceAccountFile;
+
+    private final ResourceLoader resourceLoader;
 
     private final QuestionRepository questionRepository;
 
@@ -78,6 +91,15 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public void testLogger() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:" + serviceAccountFile);
+        String jsonContent = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+        log.info("Resource exists {}", jsonContent);
+    }
+
 
     // 요청 DTO
     @Getter
