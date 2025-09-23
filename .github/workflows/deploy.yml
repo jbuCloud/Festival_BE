@@ -3,12 +3,12 @@ name: CI/CD to EC2
 on:
   workflow_dispatch:
   push:
-    branches: [dev]
+    branches: [dev2]
     paths-ignore:
       - '.github/workflows/**'
       - 'README.md'
   pull_request:
-    branches: [dev]
+    branches: [dev2]
     paths-ignore:
       - '.github/workflows/**'
       - 'README.md'
