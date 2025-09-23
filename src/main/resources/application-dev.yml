@@ -5,13 +5,6 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-app:
-  admin:
-    name: ${ADMIN_USERNAME}
-    password: ${ADMIN_PASSWORD}
-  cors:
-    allowed-origins: "http://localhost:3000"
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -32,8 +25,14 @@ app:
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, account_email
+app:
+  admin:
+    name: ${ADMIN_USERNAME}
+    password: ${ADMIN_PASSWORD}
+  cors:
+    allowed-origins: "http://localhost:8080"
 
 jwt:
   secret: ${JWT_SECRET}
-  access-token-expiration-seconds: 1209600 # 14일
+  access-token-expiration-seconds: 3600 # 1시간
   refresh-token-expiration-seconds: 1209600 # 14일

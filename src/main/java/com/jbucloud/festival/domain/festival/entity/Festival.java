@@ -3,6 +3,7 @@ package com.jbucloud.festival.domain.festival.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -99,19 +100,14 @@ public class Festival {
     @Embeddable
     @Getter
     @Setter
-    public class FoodTruckMenu {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class FoodTruckMenu {
         @Column(name = "menu_name")
         private String menuName;
 
         @Column(name = "price")
         private Integer price;
 
-        // 기본 생성자
-        public FoodTruckMenu() {}
-
-        public FoodTruckMenu(String menuName, Integer price) {
-            this.menuName = menuName;
-            this.price = price;
-        }
     }
 }

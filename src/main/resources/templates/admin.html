@@ -3,410 +3,961 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>퀴즈 관리자 페이지</title>
+    <title>축제 관리자 페이지</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; text-align: center; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .tabs { display: flex; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem; overflow: hidden; }
-        .tab { flex: 1; padding: 1rem; text-align: center; cursor: pointer; background: white; border: none; font-size: 1rem; transition: all 0.3s ease; }
-        .tab:hover { background: #f8f9fa; }
-        .tab.active { background: #667eea; color: white; }
-        .tab-content { display: none; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .tab-content.active { display: block; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 2px solid #e1e5e9; border-radius: 5px; font-size: 1rem; transition: border-color 0.3s ease; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
-        .form-group textarea { min-height: 100px; resize: vertical; }
-        .choices-container { border: 2px dashed #e1e5e9; padding: 1rem; border-radius: 5px; margin-top: 0.5rem; }
-        .choice-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-        .choice-item input { flex: 1; }
-        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; text-decoration: none; display: inline-block; text-align: center; }
-        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
-        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%); color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-small { padding: 0.5rem 1rem; font-size: 0.9rem; }
-        .questions-list { max-height: 600px; overflow-y: auto; }
-        .question-item { background: #f8f9fa; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; border-left: 4px solid #667eea; }
-        .question-item h4 { color: #667eea; margin-bottom: 0.5rem; }
-        .question-item .game-type { background: #667eea; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
-        .choices-display { margin: 0.5rem 0; }
-        .choice-display { padding: 0.3rem 0.8rem; margin: 0.2rem 0; background: white; border-radius: 5px; border: 1px solid #e1e5e9; }
-        .choice-display.correct { background: #d4edda; border-color: #c3e6cb; font-weight: bold; }
-        .question-actions { margin-top: 1rem; }
-        .loading { text-align: center; padding: 2rem; color: #667eea; }
-        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
-        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
-        .alert-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-        .alert-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
-        .filter-controls { margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; }
-        .filter-controls select { padding: 0.5rem; border: 2px solid #e1e5e9; border-radius: 5px; }
-        .muted { color: #6c757d; font-size: 0.9rem; }
-
-        /* 모달 스타일 */
-        .modal {
-            display: none; /* 기본은 안 보임 */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
+        body { 
+            background-color: #f8f9fa; 
         }
-        .modal-content {
-            background: #fff;
-            margin: 20% auto;
-            padding: 20px;
-            width: 300px;
-            border-radius: 8px;
-            text-align: center;
+        .navbar { 
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); 
         }
-
-
+        .card { 
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); 
+            border: none; 
+        }
+        .card-header { 
+            background-color: #495057; 
+            color: white; 
+            font-weight: bold; 
+        }
+        .btn-primary { 
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); 
+            border: none; 
+        }
+        .btn-primary:hover { 
+            background: linear-gradient(45deg, #5a6fd8 0%, #6a4190 100%); 
+        }
+        .loading { 
+            display: none; 
+        }
     </style>
 </head>
 <body>
-
-
-    <button id="btn">/admin/test 호출</button>
-
-    <!-- 모달 -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <p id="modalText"></p>
-            <button id="closeBtn">닫기</button>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/admin">
+                <i class="fas fa-calendar-alt me-2"></i>축제 관리자
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-user-shield me-1"></i>관리자 모드
+                </span>
+            </div>
         </div>
-    </div>
+    </nav>
 
-
-<div class="container">
-    <div class="header">
-        <h1>퀴즈 관리자 페이지</h1>
-        <p>우리 구름톤 유니브 정상 영업합니다..</p>
-    </div>
-
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('create')">퀴즈 생성</button>
-        <button class="tab" onclick="switchTab('list')">퀴즈 목록</button>
-    </div>
-
-    <!-- 퀴즈 생성 탭 -->
-    <div id="create-tab" class="tab-content active">
-        <h2>새 퀴즈 생성</h2>
-        <div id="create-alert"></div>
-        <form id="quiz-form">
-            <div class="form-group">
-                <label for="gameType">게임 타입</label>
-                <!-- SUBJECTIVE 제거, 단순 카테고리만 선택 -->
-                <select id="gameType" name="gameType" required>
-                    <option value="">게임 타입을 선택하세요</option>
-                    <option value="DADJOKE">아재개그</option>
-                    <option value="CAMPUS">학교학과</option>
-                    <option value="TTS">TTS</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="stem">문제</label>
-                <textarea id="stem" name="stem" placeholder="퀴즈 문제를 입력하세요" required></textarea>
-            </div>
-
-            <div class="form-group" id="choices-section">
-                <label>선택지 <span class="muted">(추가하지 않으면 주관식)</span></label>
-                <div class="choices-container">
-                    <div id="choices-list"><!-- 기본 0개 --></div>
-                    <button type="button" class="btn btn-success btn-small" onclick="addChoice()">선택지 추가</button>
+    <div class="container mt-4">
+        <!-- Dashboard Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-calendar-check text-primary"></i></h5>
+                        <h3 class="text-primary" id="totalFestivals">0</h3>
+                        <p class="card-text">총 축제</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group" id="correct-answer-section">
-                <label for="correctAnswer">정답</label>
-                <input type="text" id="correctAnswer" name="correctAnswer" placeholder="정답 내용을 입력하세요" required>
-                <small id="answer-help" style="color: #666; font-size: 0.9em; margin-top: 0.5rem; display: block;">
-                    선택지가 없으면 주관식입니다. 정답 내용을 입력하세요.
-                </small>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-bullhorn text-info"></i></h5>
+                        <h3 class="text-info" id="totalNotices">0</h3>
+                        <p class="card-text">공지사항</p>
+                    </div>
+                </div>
             </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-truck text-success"></i></h5>
+                        <h3 class="text-success" id="totalFoodTrucks">0</h3>
+                        <p class="card-text">푸드트럭</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-store text-warning"></i></h5>
+                        <h3 class="text-warning" id="totalBooths">0</h3>
+                        <p class="card-text">부스</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <button type="submit" class="btn btn-primary">퀴즈 생성</button>
-            <button type="button" class="btn btn-secondary" onclick="resetForm()">초기화</button>
-        </form>
+        <!-- Controls -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-lg" onclick="openCreateModal()">
+                    <i class="fas fa-plus me-2"></i>새 축제 등록
+                </button>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="searchKeyword" placeholder="축제 제목으로 검색...">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100" onclick="searchFestivals()">
+                            <i class="fas fa-search me-1"></i>검색
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <select class="form-select" id="filterType" onchange="applyFilters()">
+                    <option value="">모든 타입</option>
+                    <option value="NOTICE">공지사항</option>
+                    <option value="BOOTH">부스</option>
+                    <option value="EVENT">이벤트</option>
+                    <option value="FOOD_TRUCK">푸드트럭</option>
+                    <option value="TIMETABLE">타임테이블</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="filterLocation" onchange="applyFilters()">
+                    <option value="">모든 위치</option>
+                    <option value="BOOTH_ZONE">운영본부(QR)</option>
+                    <option value="STAGE_PHOTO_BOOTH">포토부스</option>
+                    <option value="DIY_DATE_BOOTH">DIY 소개팅</option>
+                    <option value="COMPANY_BOOTH">업체부스</option>
+                    <option value="PARTNER_BOOTH">제휴부스</option>
+                    <option value="VIKING_BOOTH">바이킹</option>
+                    <option value="FOREIGN_STUDENT_BOOTH">재학생 외국인 부스</option>
+                    <option value="ALCOHOL_BOOTH">주류</option>
+                    <option value="FOOD_TRUCK">푸드트럭</option>
+                    <option value="CHAIRS_AND_TABLES">의자 및 테이블</option>
+                    <option value="MAIN_STAGE">무대</option>
+                    <option value="OPERATION_HQ">운영본부</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                    <i class="fas fa-times me-1"></i>필터 초기화
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="text-center loading" id="loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">로딩 중...</span>
+            </div>
+        </div>
+
+        <!-- Festival List -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i>축제 목록</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>타입</th>
+                                <th>제목</th>
+                                <th>위치</th>
+                                <th>시작시간</th>
+                                <th>종료시간</th>
+                                <th>상시운영</th>
+                                <th>작업</th>
+                            </tr>
+                        </thead>
+                        <tbody id="festivalTableBody">
+                            <!-- 여기에 동적으로 축제 목록이 표시됩니다 -->
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">축제 목록을 불러오는 중...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 퀴즈 목록 탭 -->
-    <div id="list-tab" class="tab-content">
-        <h2>퀴즈 목록</h2>
-        <div id="list-alert"></div>
-        <div class="filter-controls">
-            <label for="filterGameType">게임 타입 필터:</label>
-            <select id="filterGameType" onchange="loadQuestions()">
-                <option value="">전체</option>
-                <option value="DADJOKE">아재개그</option>
-                <option value="CAMPUS">학교학과</option>
-                <option value="TTS">TTS</option>
-            </select>
-            <button class="btn btn-primary btn-small" onclick="loadQuestions()">새로고침</button>
-        </div>
-        <div id="questions-container">
-            <div class="loading">퀴즈 목록을 불러오는 중...</div>
+    <!-- Create/Edit Modal -->
+    <div class="modal fade" id="festivalModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 class="modal-title" id="modalTitle">새 축제 등록</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="festivalForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="festivalId" value="">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="infoType" class="form-label">정보 타입 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="infoType" required>
+                                    <option value="">선택하세요</option>
+                                    <option value="NOTICE">공지사항</option>
+                                    <option value="BOOTH">부스</option>
+                                    <option value="EVENT">이벤트</option>
+                                    <option value="FOOD_TRUCK">푸드트럭</option>
+                                    <option value="TIMETABLE">타임테이블</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="locationTag" class="form-label">위치</label>
+                                <select class="form-select" id="locationTag">
+                                    <option value="">선택하세요</option>
+                                    <option value="BOOTH_ZONE">운영본부(QR)</option>
+                                    <option value="STAGE_PHOTO_BOOTH">포토부스</option>
+                                    <option value="DIY_DATE_BOOTH">DIY 소개팅</option>
+                                    <option value="COMPANY_BOOTH">업체부스</option>
+                                    <option value="PARTNER_BOOTH">제휴부스</option>
+                                    <option value="VIKING_BOOTH">바이킹</option>
+                                    <option value="FOREIGN_STUDENT_BOOTH">재학생 외국인 부스</option>
+                                    <option value="ALCOHOL_BOOTH">주류</option>
+                                    <option value="FOOD_TRUCK">푸드트럭</option>
+                                    <option value="CHAIRS_AND_TABLES">의자 및 테이블</option>
+                                    <option value="MAIN_STAGE">무대</option>
+                                    <option value="OPERATION_HQ">운영본부</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preview" class="form-label">미리보기</label>
+                            <textarea class="form-control" id="preview" rows="2" placeholder="간단한 설명을 입력하세요"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isAlwaysOpen">
+                                <label class="form-check-label" for="isAlwaysOpen">
+                                    상시 운영
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row" id="timeFields">
+                            <div class="col-md-6 mb-3">
+                                <label for="startTime" class="form-label">시작시간</label>
+                                <input type="datetime-local" class="form-control" id="startTime">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endTime" class="form-label">종료시간</label>
+                                <input type="datetime-local" class="form-control" id="endTime">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="detailedDescription" class="form-label">상세 설명</label>
+                            <textarea class="form-control" id="detailedDescription" rows="4" placeholder="상세한 설명을 입력하세요"></textarea>
+                        </div>
+
+                        <!-- Food Truck Menus -->
+                        <div class="mb-3" id="foodTruckSection" style="display: none;">
+                            <label class="form-label">푸드트럭 메뉴</label>
+                            <div id="menuItems" style="max-height: 200px; overflow-y: auto;"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addMenuItem()">
+                                <i class="fas fa-plus me-1"></i>메뉴 추가
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    let questions = [];
-    let currentEditingId = null;
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">삭제 확인</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>정말로 이 축제를 삭제하시겠습니까?</p>
+                    <p class="text-danger"><strong>이 작업은 되돌릴 수 없습니다.</strong></p>
+                    <div id="deletePreview" class="mt-3 p-3 bg-light rounded">
+                        <!-- 삭제할 축제 미리보기가 여기에 표시됩니다 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const btn = document.getElementById("btn");
-    const modal = document.getElementById("myModal");
-    const modalText = document.getElementById("modalText");
-    const closeBtn = document.getElementById("closeBtn");
+    <!-- Detail View Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(45deg, #28a745 0%, #20c997 100%); color: white;">
+                    <h5 class="modal-title">축제 상세 정보</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailContent">
+                    <!-- 상세 정보가 여기에 동적으로 표시됩니다 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="editFromDetail()">
+                        <i class="fas fa-edit me-1"></i>수정
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    btn.addEventListener("click", async () => {
-        try {
-            const res = await fetch("/admin/test"); // 같은 오리진이면 그냥 경로만
-            if (!res.ok) throw new Error("API 에러: " + res.status);
-            const text = await res.text(); // JSON이면 res.json()으로
-            modalText.textContent = text;
-            modal.style.display = "block";
-        } catch (err) {
-            modalText.textContent = "에러: " + err.message;
-            modal.style.display = "block";
-        }
-    });
-
-    closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     
-    // 정답 도움말/placeholder 업데이트 (선택지 개수 기준)
-    function updateAnswerHelp() {
-        const choicesCount = document.querySelectorAll('#choices-list .choice-item').length;
-        const help = document.getElementById('answer-help');
-        const input = document.getElementById('correctAnswer');
-        if (choicesCount === 0) {
-            help.textContent = '선택지가 없으면 주관식입니다. 정답 내용을 입력하세요.';
-            input.placeholder = '정답 내용을 입력하세요';
-        } else {
-            help.textContent = `선택지가 ${choicesCount}개입니다. 객관식 정답 번호를 입력하세요 (1~${choicesCount}).`;
-            input.placeholder = `정답 번호 (1~${choicesCount})`;
-        }
-    }
+    <!-- 기본 JavaScript -->
+    <script>
+        let festivals = [];
+        let currentFestivalId = null;
 
-    // 탭 전환
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById(tabName + '-tab').classList.add('active');
-        if (tabName === 'list') loadQuestions();
-    }
+        // 페이지 로드시 축제 목록 불러오기
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('관리자 페이지 로드됨');
+            loadFestivals();
+            
+            // 상시 운영 체크박스 이벤트
+            document.getElementById('isAlwaysOpen').addEventListener('change', function() {
+                const timeFields = document.getElementById('timeFields');
+                if (this.checked) {
+                    timeFields.style.display = 'none';
+                    document.getElementById('startTime').value = '';
+                    document.getElementById('endTime').value = '';
+                } else {
+                    timeFields.style.display = 'block';
+                }
+            });
 
-    // 선택지 추가 (기본 0개에서 시작)
-    function addChoice() {
-        const choicesList = document.getElementById('choices-list');
-        const choiceItem = document.createElement('div');
-        choiceItem.className = 'choice-item';
-        choiceItem.innerHTML = `
-                <input type="text" placeholder="선택지 내용" class="choice-label" required>
-                <button type="button" class="btn btn-danger btn-small" onclick="removeChoice(this)">삭제</button>
-            `;
-        choicesList.appendChild(choiceItem);
-        updateAnswerHelp();
-    }
+            // 정보 타입 변경 이벤트
+            document.getElementById('infoType').addEventListener('change', function() {
+                const foodTruckSection = document.getElementById('foodTruckSection');
+                if (this.value === 'FOOD_TRUCK') {
+                    foodTruckSection.style.display = 'block';
+                } else {
+                    foodTruckSection.style.display = 'none';
+                }
+            });
 
-    // 선택지 삭제 (최소 개수 제한 제거, 0개 허용)
-    function removeChoice(button) {
-        button.parentElement.remove();
-        updateAnswerHelp();
-    }
+            // 폼 제출 이벤트
+            document.getElementById('festivalForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveFestival();
+            });
 
-    // 폼 초기화
-    function resetForm() {
-        document.getElementById('quiz-form').reset();
-        const choicesList = document.getElementById('choices-list');
-        choicesList.innerHTML = '';
-        currentEditingId = null;
-        document.querySelector('#create-tab h2').textContent = '새 퀴즈 생성';
-        document.querySelector('button[type="submit"]').textContent = '퀴즈 생성';
-        updateAnswerHelp();
-    }
+            // 검색 엔터키 이벤트
+            document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchFestivals();
+                }
+            });
+        });
 
-    // 알림 표시
-    function showAlert(containerId, message, type) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-        setTimeout(() => { container.innerHTML = ''; }, 3000);
-    }
-
-    // 게임 타입 한글 변환 (구 주관식 호환용 키는 유지)
-    function getGameTypeLabel(gameType) {
-        const labels = { 'DADJOKE': '아재개그', 'CAMPUS': '학교학과', 'TTS': 'TTS', 'SUBJECTIVE': '주관식(구)' };
-        return labels[gameType] || gameType;
-    }
-
-    // 퀴즈 목록 로드
-    async function loadQuestions() {
-        const container = document.getElementById('questions-container');
-        const filterGameType = document.getElementById('filterGameType').value;
-        try {
-            container.innerHTML = '<div class="loading">퀴즈 목록을 불러오는 중...</div>';
-            let url = '/admin/api/questions';
-            if (filterGameType) url += `/${filterGameType}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('퀴즈 목록을 불러올 수 없습니다.');
-            questions = await response.json();
-            displayQuestions(questions);
-        } catch (error) {
-            container.innerHTML = `<div class="alert alert-error">오류가 발생했습니다: ${error.message}</div>`;
-        }
-    }
-
-    // 퀴즈 목록 표시 (선택지 유무로 주/객관식 판단)
-    function displayQuestions(questionList) {
-        const container = document.getElementById('questions-container');
-        if (questionList.length === 0) {
-            container.innerHTML = '<div class="alert alert-info">등록된 퀴즈가 없습니다.</div>';
-            return;
-        }
-        container.innerHTML = questionList.map(question => {
-            const isObjective = question.choices && question.choices.length > 0;
-            let choicesHtml = '';
-            if (isObjective) {
-                choicesHtml = `
-                        <div class="choices-display">
-                            <strong>선택지:</strong>
-                            ${question.choices.map(choice => `
-                                <div class="choice-display ${String(choice.choiceId) === String(question.correctAnswer) ? 'correct' : ''}">
-                                    ${choice.choiceId}: ${choice.label} ${String(choice.choiceId) === String(question.correctAnswer) ? '(정답)' : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-            } else {
-                choicesHtml = `
-                        <div class="choices-display">
-                            <strong>정답:</strong> <span style="background: #d4edda; padding: 0.3rem 0.8rem; border-radius: 5px; font-weight: bold;">${question.correctAnswer}</span>
-                            <span class="muted">(주관식)</span>
-                        </div>
-                    `;
+        // 축제 목록 불러오기
+        async function loadFestivals() {
+            showLoading(true);
+            try {
+                const response = await fetch('/api/festivals');
+                if (response.ok) {
+                    festivals = await response.json();
+                    displayFestivals(festivals);
+                    updateDashboard(festivals);
+                } else {
+                    showAlert('축제 목록을 불러오는데 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
             }
-            return `
-                    <div class="question-item">
-                        <div class="game-type">${getGameTypeLabel(question.gameType)}</div>
-                        <h4>문제 #${question.id}</h4>
-                        <p><strong>내용:</strong> ${question.stem}</p>
-                        ${choicesHtml}
-                        <div class="question-actions">
-                            <button class="btn btn-primary btn-small" onclick="editQuestion(${question.id})">수정</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteQuestion(${question.id})">삭제</button>
+            showLoading(false);
+        }
+
+        // 축제 목록 테이블에 표시
+        function displayFestivals(festivals) {
+            const tbody = document.getElementById('festivalTableBody');
+            tbody.innerHTML = '';
+
+            if (festivals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">등록된 축제가 없습니다.</td></tr>';
+                return;
+            }
+
+            festivals.forEach(festival => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${festival.id}</td>
+                    <td><span class="badge bg-primary">${getInfoTypeDisplayName(festival.infoType)}</span></td>
+                    <td>
+                        <a href="#" onclick="viewDetail(${festival.id})" class="text-decoration-none fw-bold">
+                            ${festival.title}
+                        </a>
+                        ${festival.preview ? '<br><small class="text-muted">' + festival.preview + '</small>' : ''}
+                    </td>
+                    <td>${festival.locationTag ? getLocationTagDisplayName(festival.locationTag) : '-'}</td>
+                    <td>${festival.startTime ? formatDateTime(festival.startTime) : '-'}</td>
+                    <td>${festival.endTime ? formatDateTime(festival.endTime) : '-'}</td>
+                    <td>
+                        <span class="badge ${festival.alwaysOpen ? 'bg-success' : 'bg-secondary'}">
+                            ${festival.alwaysOpen ? '예' : '아니오'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="viewDetail(${festival.id})" title="상세보기">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editFestival(${festival.id})" title="수정">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteFestival(${festival.id})" title="삭제">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 대시보드 카운트 업데이트
+        function updateDashboard(festivals) {
+            document.getElementById('totalFestivals').textContent = festivals.length;
+            document.getElementById('totalNotices').textContent = festivals.filter(f => f.infoType === 'NOTICE').length;
+            document.getElementById('totalFoodTrucks').textContent = festivals.filter(f => f.infoType === 'FOOD_TRUCK').length;
+            document.getElementById('totalBooths').textContent = festivals.filter(f => f.infoType === 'BOOTH').length;
+        }
+
+        // 로딩 표시/숨김
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            if (show) {
+                loading.style.display = 'block';
+            } else {
+                loading.style.display = 'none';
+            }
+        }
+
+        // 알림 메시지 표시
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.style.minWidth = '300px';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // 임시 함수들 (다음 단계에서 구현)
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = '새 축제 등록';
+            document.getElementById('festivalForm').reset();
+            document.getElementById('festivalId').value = '';
+            document.getElementById('timeFields').style.display = 'block';
+            document.getElementById('foodTruckSection').style.display = 'none';
+            document.getElementById('menuItems').innerHTML = '';
+            new bootstrap.Modal(document.getElementById('festivalModal')).show();
+        }
+
+        // 축제 수정 모달 열기
+        async function editFestival(id) {
+            try {
+                const response = await fetch(`/api/festivals/${id}`);
+                if (response.ok) {
+                    const festival = await response.json();
+                    populateForm(festival);
+                    document.getElementById('modalTitle').textContent = '축제 수정';
+                    new bootstrap.Modal(document.getElementById('festivalModal')).show();
+                } else {
+                    showAlert('축제 정보를 불러오는데 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+        }
+
+        // 폼에 축제 데이터 입력
+        function populateForm(festival) {
+            document.getElementById('festivalId').value = festival.id;
+            document.getElementById('infoType').value = festival.infoType;
+            document.getElementById('locationTag').value = festival.locationTag || '';
+            document.getElementById('title').value = festival.title;
+            document.getElementById('preview').value = festival.preview || '';
+            document.getElementById('isAlwaysOpen').checked = festival.alwaysOpen;
+            document.getElementById('detailedDescription').value = festival.detailedDescription || '';
+
+            // 시간 필드 처리
+            if (festival.alwaysOpen) {
+                document.getElementById('timeFields').style.display = 'none';
+            } else {
+                document.getElementById('timeFields').style.display = 'block';
+                if (festival.startTime) {
+                    document.getElementById('startTime').value = formatDateTimeForInput(festival.startTime);
+                }
+                if (festival.endTime) {
+                    document.getElementById('endTime').value = formatDateTimeForInput(festival.endTime);
+                }
+            }
+
+            // 푸드트럭 메뉴 처리
+            if (festival.infoType === 'FOOD_TRUCK') {
+                document.getElementById('foodTruckSection').style.display = 'block';
+                const menuItems = document.getElementById('menuItems');
+                menuItems.innerHTML = '';
+                if (festival.foodTruckMenus && festival.foodTruckMenus.length > 0) {
+                    festival.foodTruckMenus.forEach(menu => {
+                        addMenuItem(menu.menuName, menu.price);
+                    });
+                }
+            } else {
+                document.getElementById('foodTruckSection').style.display = 'none';
+            }
+        }
+
+        // 축제 저장
+        async function saveFestival() {
+            const festivalId = document.getElementById('festivalId').value;
+            const isEdit = !!festivalId;
+
+            const formData = {
+                infoType: document.getElementById('infoType').value,
+                locationTag: document.getElementById('locationTag').value || null,
+                title: document.getElementById('title').value,
+                preview: document.getElementById('preview').value || null,
+                isAlwaysOpen: document.getElementById('isAlwaysOpen').checked,
+                detailedDescription: document.getElementById('detailedDescription').value || null,
+                foodTruckMenus: []
+            };
+
+            if (!formData.isAlwaysOpen) {
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+                if (startTime) formData.startTime = startTime;
+                if (endTime) formData.endTime = endTime;
+            }
+
+            // 푸드트럭 메뉴 수집
+            if (formData.infoType === 'FOOD_TRUCK') {
+                const menuItems = document.querySelectorAll('.menu-item');
+                menuItems.forEach(item => {
+                    const menuName = item.querySelector('.menu-name').value;
+                    const price = item.querySelector('.menu-price').value;
+                    if (menuName && price) {
+                        formData.foodTruckMenus.push({
+                            menuName: menuName,
+                            price: parseInt(price)
+                        });
+                    }
+                });
+            }
+
+            try {
+                let response;
+                if (isEdit) {
+                    response = await fetch(`/admin/${festivalId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch('/admin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                if (response.ok) {
+                    showAlert(isEdit ? '축제가 수정되었습니다.' : '축제가 등록되었습니다.', 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('festivalModal')).hide();
+                    loadFestivals();
+                } else {
+                    const errorText = await response.text();
+                    showAlert('저장에 실패했습니다: ' + errorText, 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+        }
+
+        // 메뉴 아이템 추가
+        function addMenuItem(menuName = '', price = '') {
+            const menuItems = document.getElementById('menuItems');
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item mb-3 p-3';
+            menuItem.style.backgroundColor = '#f8f9fa';
+            menuItem.style.border = '1px solid #dee2e6';
+            menuItem.style.borderRadius = '0.375rem';
+            menuItem.innerHTML = `
+                <div class="row">
+                    <div class="col-md-5 mb-2">
+                        <input type="text" class="form-control menu-name" placeholder="메뉴명" value="${menuName}" required>
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <input type="number" class="form-control menu-price" placeholder="가격" value="${price}" required min="0">
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="removeMenuItem(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            menuItems.appendChild(menuItem);
+        }
+
+        // 메뉴 아이템 제거
+        function removeMenuItem(button) {
+            button.closest('.menu-item').remove();
+        }
+
+        // 날짜시간 입력 필드용 포맷
+        function formatDateTimeForInput(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // 날짜시간 표시용 포맷
+        function formatDateTime(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 정보 타입 표시명
+        function getInfoTypeDisplayName(type) {
+            const types = {
+                'NOTICE': '공지사항',
+                'BOOTH': '부스',
+                'EVENT': '이벤트',
+                'FOOD_TRUCK': '푸드트럭',
+                'TIMETABLE': '타임테이블'
+            };
+            return types[type] || type;
+        }
+
+        // 위치 태그 표시명
+        function getLocationTagDisplayName(tag) {
+            const tags = {
+                'BOOTH_ZONE': '운영본부(QR)',
+                'STAGE_PHOTO_BOOTH': '포토부스',
+                'DIY_DATE_BOOTH': 'DIY 소개팅',
+                'COMPANY_BOOTH': '업체부스',
+                'PARTNER_BOOTH': '제휴부스',
+                'VIKING_BOOTH': '바이킹',
+                'FOREIGN_STUDENT_BOOTH': '재학생 외국인 부스',
+                'ALCOHOL_BOOTH': '주류',
+                'FOOD_TRUCK': '푸드트럭',
+                'CHAIRS_AND_TABLES': '의자 및 테이블',
+                'MAIN_STAGE': '무대',
+                'OPERATION_HQ': '운영본부'
+            };
+            return tags[tag] || tag;
+        }
+
+        // 검색 기능
+        async function searchFestivals() {
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            if (!keyword) {
+                loadFestivals();
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const response = await fetch(`/api/festivals/search?keyword=${encodeURIComponent(keyword)}`);
+                if (response.ok) {
+                    const searchResults = await response.json();
+                    displayFestivals(searchResults);
+                    updateDashboard(searchResults);
+                } else {
+                    showAlert('검색에 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+            showLoading(false);
+        }
+
+        // 필터 적용
+        async function applyFilters() {
+            const type = document.getElementById('filterType').value;
+            const location = document.getElementById('filterLocation').value;
+
+            if (!type && !location) {
+                loadFestivals();
+                return;
+            }
+
+            showLoading(true);
+            try {
+                let url = '/api/festivals/filter?';
+                if (type) url += `infoType=${type}&`;
+                if (location) url += `locationTag=${location}&`;
+
+                const response = await fetch(url);
+                if (response.ok) {
+                    const filtered = await response.json();
+                    displayFestivals(filtered);
+                    updateDashboard(filtered);
+                } else {
+                    showAlert('필터링에 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+            showLoading(false);
+        }
+
+        // 필터 초기화
+        function clearFilters() {
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('searchKeyword').value = '';
+            loadFestivals();
+        }
+
+        // 축제 삭제
+        async function deleteFestival(id) {
+            try {
+                const response = await fetch(`/api/festivals/${id}`);
+                if (response.ok) {
+                    const festival = await response.json();
+                    currentFestivalId = id;
+                    
+                    // 삭제 미리보기 표시
+                    const deletePreview = document.getElementById('deletePreview');
+                    deletePreview.innerHTML = `
+                        <strong>${festival.title}</strong><br>
+                        <small class="text-muted">
+                            타입: ${getInfoTypeDisplayName(festival.infoType)} | 
+                            위치: ${festival.locationTag ? getLocationTagDisplayName(festival.locationTag) : '없음'}
+                        </small>
+                    `;
+                    
+                    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+                } else {
+                    showAlert('축제 정보를 불러오는데 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+        }
+
+        // 삭제 확인
+        async function confirmDelete() {
+            if (!currentFestivalId) return;
+
+            try {
+                const response = await fetch(`/admin/${currentFestivalId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showAlert('축제가 삭제되었습니다.', 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                    loadFestivals();
+                } else {
+                    showAlert('삭제에 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+            currentFestivalId = null;
+        }
+
+        // 상세보기
+        async function viewDetail(id) {
+            try {
+                const response = await fetch(`/api/festivals/${id}`);
+                if (response.ok) {
+                    const festival = await response.json();
+                    displayFestivalDetail(festival);
+                    new bootstrap.Modal(document.getElementById('detailModal')).show();
+                } else {
+                    showAlert('축제 정보를 불러오는데 실패했습니다.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+            }
+        }
+
+        // 상세정보 표시
+        function displayFestivalDetail(festival) {
+            currentFestivalId = festival.id;
+            const content = document.getElementById('detailContent');
+            
+            let menuHtml = '';
+            if (festival.infoType === 'FOOD_TRUCK' && festival.foodTruckMenus && festival.foodTruckMenus.length > 0) {
+                menuHtml = `
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-success">
+                                <i class="fas fa-utensils me-2"></i>메뉴
+                            </h6>
+                            <div class="row">
+                                ${festival.foodTruckMenus.map(menu => `
+                                    <div class="col-md-6 mb-2">
+                                        <div class="card">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span>${menu.menuName}</span>
+                                                    <span class="badge bg-success">${menu.price.toLocaleString()}원</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
                 `;
-        }).join('');
-    }
+            }
 
-    // 퀴즈 수정 (선택지 유무로 주/객관식 판단)
-    function editQuestion(id) {
-        const question = questions.find(q => q.id === id);
-        if (!question) return;
-        currentEditingId = id;
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.querySelector('[onclick="switchTab(\'create\')"]').classList.add('active');
-        document.getElementById('create-tab').classList.add('active');
-        document.getElementById('gameType').value = question.gameType;
-        document.getElementById('stem').value = question.stem;
-        document.getElementById('correctAnswer').value = question.correctAnswer;
-        const choicesList = document.getElementById('choices-list');
-        if (question.choices && question.choices.length > 0) {
-            choicesList.innerHTML = question.choices.map(choice => `
-                    <div class="choice-item">
-                        <input type="text" placeholder="선택지 내용" class="choice-label" value="${choice.label}" required>
-                        <button type="button" class="btn btn-danger btn-small" onclick="removeChoice(this)">삭제</button>
+            content.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6 class="fw-bold text-primary">
+                            <i class="fas fa-tag me-2"></i>기본 정보
+                        </h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="fw-bold" width="30%">ID</td>
+                                <td>${festival.id}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">타입</td>
+                                <td><span class="badge bg-primary">${getInfoTypeDisplayName(festival.infoType)}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">제목</td>
+                                <td>${festival.title}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">위치</td>
+                                <td>${festival.locationTag ? getLocationTagDisplayName(festival.locationTag) : '없음'}</td>
+                            </tr>
+                        </table>
                     </div>
-                `).join('');
-        } else {
-            choicesList.innerHTML = '';
+                    <div class="col-md-6 mb-3">
+                        <h6 class="fw-bold text-info">
+                            <i class="fas fa-clock me-2"></i>시간 정보
+                        </h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="fw-bold" width="30%">상시운영</td>
+                                <td>
+                                    <span class="badge ${festival.alwaysOpen ? 'bg-success' : 'bg-secondary'}">
+                                        ${festival.alwaysOpen ? '예' : '아니오'}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">시작시간</td>
+                                <td>${festival.startTime ? formatDateTime(festival.startTime) : '없음'}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">종료시간</td>
+                                <td>${festival.endTime ? formatDateTime(festival.endTime) : '없음'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                ${festival.preview ? `
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <h6 class="fw-bold text-warning">
+                                <i class="fas fa-eye me-2"></i>미리보기
+                            </h6>
+                            <div class="alert alert-light">
+                                ${festival.preview}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                ${festival.detailedDescription ? `
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <h6 class="fw-bold text-secondary">
+                                <i class="fas fa-align-left me-2"></i>상세 설명
+                            </h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    ${festival.detailedDescription.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                ${menuHtml}
+            `;
         }
-        document.querySelector('#create-tab h2').textContent = '퀴즈 수정';
-        document.querySelector('button[type="submit"]').textContent = '퀴즈 수정';
-        updateAnswerHelp();
-    }
 
-    // 퀴즈 삭제
-    async function deleteQuestion(id) {
-        if (!confirm('정말로 이 퀴즈를 삭제하시겠습니까?')) return;
-        try {
-            const response = await fetch(`/admin/api/questions/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('퀴즈 삭제에 실패했습니다.');
-            showAlert('list-alert', '퀴즈가 삭제되었습니다.', 'success');
-            loadQuestions();
-        } catch (error) {
-            showAlert('list-alert', `오류가 발생했습니다: ${error.message}`, 'error');
-        }
-    }
-
-    // 폼 제출 처리
-    document.getElementById('quiz-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const gameType = formData.get('gameType');
-        const stem = formData.get('stem');
-        const correctAnswer = formData.get('correctAnswer');
-        const choiceInputs = Array.from(document.querySelectorAll('.choice-label'));
-        const isObjective = choiceInputs.length > 0; // 선택지가 있으면 객관식
-        let choices = [];
-
-        if (isObjective) {
-            const labels = choiceInputs.map(input => input.value.trim());
-            if (labels.some(label => !label)) {
-                showAlert('create-alert', '모든 선택지를 입력해주세요.', 'error');
-                return;
+        // 상세보기에서 수정 버튼 클릭
+        function editFromDetail() {
+            bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
+            if (currentFestivalId) {
+                editFestival(currentFestivalId);
             }
-            choices = labels.map((label, index) => ({ choiceId: String(index + 1), label }));
-            const answerNumber = parseInt(correctAnswer, 10);
-            if (Number.isNaN(answerNumber) || answerNumber < 1 || answerNumber > choices.length) {
-                showAlert('create-alert', `정답은 1부터 ${choices.length}까지의 번호여야 합니다.`, 'error');
-                return;
-            }
-        } else {
-            choices = [];
-            if (!correctAnswer.trim()) {
-                showAlert('create-alert', '주관식 정답을 입력해주세요.', 'error');
-                return;
-            }
         }
-
-        const questionData = { gameType, stem, choices, correctAnswer };
-        try {
-            const url = currentEditingId ? `/admin/api/questions/${currentEditingId}` : '/admin/api/questions';
-            const method = currentEditingId ? 'PUT' : 'POST';
-            const response = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(questionData)
-            });
-            if (!response.ok) throw new Error('퀴즈 저장에 실패했습니다.');
-            const message = currentEditingId ? '퀴즈가 수정되었습니다.' : '퀴즈가 생성되었습니다.';
-            showAlert('create-alert', message, 'success');
-            resetForm();
-            if (document.getElementById('list-tab').classList.contains('active')) loadQuestions();
-        } catch (error) {
-            showAlert('create-alert', `오류가 발생했습니다: ${error.message}`, 'error');
-        }
-    });
-
-    // 페이지 로드시 초기화
-    document.addEventListener('DOMContentLoaded', function() {
-        updateAnswerHelp(); // 초기 도움말 설정
-    });
-</script>
+    </script>
 </body>
 </html>
