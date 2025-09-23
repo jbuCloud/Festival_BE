@@ -29,6 +29,7 @@ public class SecurityConfig {
             "/api/auth/**",
             // 회원 관련 API URL
             "/api/member/**",
+            "/api/v1/**"
     };
 
     @Bean
@@ -63,6 +64,7 @@ public class SecurityConfig {
 
                 // endpoint 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/v1/submissions/*/score").authenticated()
                         .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
                         .requestMatchers("/admin/**").permitAll() // 관리자페이지
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
