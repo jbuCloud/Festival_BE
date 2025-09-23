@@ -4,6 +4,7 @@ import com.jbucloud.festival.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,11 +28,12 @@ public class SecurityConfig {
             // 인증 관련 API URL
             "/api/auth/**",
             // 회원 관련 API URL
-            "/api/member/**"
+            "/api/member/**",
     };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Profile("prod")
+    public SecurityFilterChain prodFilterChain(HttpSecurity http) throws Exception {
         http
                 // http basic, csrf, session 비활성화
                 .httpBasic(httpBasic -> httpBasic.disable())
@@ -41,6 +43,28 @@ public class SecurityConfig {
                 // endpoint 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
+                        .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
+                )
+
+                // JWT 필터 추가
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    @Profile("dev")
+    public SecurityFilterChain devFilterChain(HttpSecurity http) throws Exception {
+        http
+                // http basic, csrf, session 비활성화
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // endpoint 권한 설정
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
+                        .requestMatchers("/admin/**").permitAll() // 관리자페이지
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
                 )
 
