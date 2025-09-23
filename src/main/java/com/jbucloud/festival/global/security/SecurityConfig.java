@@ -1,6 +1,5 @@
 package com.jbucloud.festival.global.security;
 
-import com.jbucloud.festival.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
@@ -55,10 +53,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
-                )
+                );
 
-                // JWT 필터 추가
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -79,10 +75,8 @@ public class SecurityConfig {
                         .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
                         .requestMatchers("/admin/**").permitAll() // 관리자페이지
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
-                )
+                );
 
-                // JWT 필터 추가
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
