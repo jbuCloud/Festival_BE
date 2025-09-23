@@ -1,8 +1,8 @@
-package com.jbucloud.festival.quizgame.controller;
+package com.jbucloud.festival.domain.quizgame.controller;
 
 import com.jbucloud.festival.global.response.ApiResponse;
-import com.jbucloud.festival.quizgame.dto.GameDto;
-import com.jbucloud.festival.quizgame.service.QuizGameService;
+import com.jbucloud.festival.domain.quizgame.dto.GameDto;
+import com.jbucloud.festival.domain.quizgame.service.QuizGameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;

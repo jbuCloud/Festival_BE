@@ -1,8 +1,8 @@
-package com.jbucloud.festival.quizgame.controller;
+package com.jbucloud.festival.domain.quizgame.controller;
 
-import com.jbucloud.festival.quizgame.domain.GameType;
-import com.jbucloud.festival.quizgame.domain.Question;
-import com.jbucloud.festival.quizgame.repository.QuestionRepository;
+import com.jbucloud.festival.domain.quizgame.domain.GameType;
+import com.jbucloud.festival.domain.quizgame.domain.Question;
+import com.jbucloud.festival.domain.quizgame.repository.QuestionRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.jbucloud.festival.quizgame.repository;
+package com.jbucloud.festival.domain.quizgame.repository;
 
-import com.jbucloud.festival.quizgame.domain.GameSession;
+import com.jbucloud.festival.domain.quizgame.domain.GameSession;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

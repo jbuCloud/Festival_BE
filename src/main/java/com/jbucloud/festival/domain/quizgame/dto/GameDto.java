@@ -1,6 +1,6 @@
-package com.jbucloud.festival.quizgame.dto;
+package com.jbucloud.festival.domain.quizgame.dto;
 
-import com.jbucloud.festival.quizgame.domain.GameType;
+import com.jbucloud.festival.domain.quizgame.domain.GameType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.ZonedDateTime;

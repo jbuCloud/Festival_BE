@@ -1,4 +1,4 @@
-package com.jbucloud.festival.quizgame.domain;
+package com.jbucloud.festival.domain.quizgame.domain;
 
 // Question.java
 

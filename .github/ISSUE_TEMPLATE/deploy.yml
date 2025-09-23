@@ -1,4 +1,4 @@
-`name: 🚀 Deploy
+name: 🚀 Deploy
 description: 배포 관련 이슈
 title: "[Deploy] "
 labels: ["deploy 🚀"]
