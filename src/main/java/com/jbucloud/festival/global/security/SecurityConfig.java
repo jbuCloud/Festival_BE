@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,40 +23,66 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.admin.name}")
-    private String name;
-
-    @Value("${app.admin.password}")
-    private String password;
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
+    // 인증 없이 접근 가능한 URL 배열
+    private static final String[] PERMIT_URL_ARRAY = {
+            // Swagger URL
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            // 인증 관련 API URL
+            "/api/auth/**",
+            // 회원 관련 API URL
+            "/api/member/**",
+            "/api/v1/**"
+    };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Profile("prod")
+    public SecurityFilterChain prodFilterChain(HttpSecurity http) throws Exception {
         http
+                // http basic, csrf, session 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(Customizer.withDefaults());
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // endpoint 권한 설정
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
+                        .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
+                );
+
 
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.withDefaultPasswordEncoder()
-                .username(name)
-                .password(password)
-                .roles("ADMIN")
-                .build();
+    @Profile("dev")
+    public SecurityFilterChain devFilterChain(HttpSecurity http) throws Exception {
+        http
+                // http basic, csrf, session 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-        return new InMemoryUserDetailsManager(admin);
+                // endpoint 권한 설정
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/v1/submissions/*/score").authenticated()
+                        .requestMatchers(PERMIT_URL_ARRAY).permitAll() // 배열에 있는 URL은 인증 없이 접근 허용
+                        .requestMatchers("/admin/**").permitAll() // 관리자페이지
+                        .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
+                );
+
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
