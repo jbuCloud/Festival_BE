@@ -6,6 +6,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 app:
+  admin:
+    name: ${ADMIN_USERNAME}
+    password: ${ADMIN_PASSWORD}
   cors:
     allowed-origins: "http://localhost:3000"
 

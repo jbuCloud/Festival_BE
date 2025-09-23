@@ -47,9 +47,44 @@
         .filter-controls { margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; }
         .filter-controls select { padding: 0.5rem; border: 2px solid #e1e5e9; border-radius: 5px; }
         .muted { color: #6c757d; font-size: 0.9rem; }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none; /* 기본은 안 보임 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: #fff;
+            margin: 20% auto;
+            padding: 20px;
+            width: 300px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+
     </style>
 </head>
 <body>
+
+
+    <button id="btn">/admin/test 호출</button>
+
+    <!-- 모달 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modalText"></p>
+            <button id="closeBtn">닫기</button>
+        </div>
+    </div>
+
+
 <div class="container">
     <div class="header">
         <h1>퀴즈 관리자 페이지</h1>
@@ -127,6 +162,29 @@
     let questions = [];
     let currentEditingId = null;
 
+    const btn = document.getElementById("btn");
+    const modal = document.getElementById("myModal");
+    const modalText = document.getElementById("modalText");
+    const closeBtn = document.getElementById("closeBtn");
+
+    btn.addEventListener("click", async () => {
+        try {
+            const res = await fetch("/admin/test"); // 같은 오리진이면 그냥 경로만
+            if (!res.ok) throw new Error("API 에러: " + res.status);
+            const text = await res.text(); // JSON이면 res.json()으로
+            modalText.textContent = text;
+            modal.style.display = "block";
+        } catch (err) {
+            modalText.textContent = "에러: " + err.message;
+            modal.style.display = "block";
+        }
+    });
+
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    
     // 정답 도움말/placeholder 업데이트 (선택지 개수 기준)
     function updateAnswerHelp() {
         const choicesCount = document.querySelectorAll('#choices-list .choice-item').length;
