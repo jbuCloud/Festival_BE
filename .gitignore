@@ -39,4 +39,8 @@ out/
 .env
 !.env.example
 
+src/main/resources/festival-livechat-4ac1b-firebase-adminsdk.json
+
+
 DataInit.java
+
