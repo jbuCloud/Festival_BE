@@ -715,17 +715,23 @@
 
             showLoading(true);
             try {
+                console.log('검색 키워드:', keyword);
                 const response = await fetch(`/api/festivals/search?keyword=${encodeURIComponent(keyword)}`);
+                console.log('검색 응답 상태:', response.status);
+                
                 if (response.ok) {
                     const searchResults = await response.json();
+                    console.log('검색 결과:', searchResults);
                     displayFestivals(searchResults);
                     updateDashboard(searchResults);
                 } else {
-                    showAlert('검색에 실패했습니다.', 'danger');
+                    const errorText = await response.text();
+                    console.error('검색 실패:', errorText);
+                    showAlert(`검색에 실패했습니다: ${response.status}`, 'danger');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+                console.error('검색 에러:', error);
+                showAlert('네트워크 오류가 발생했습니다: ' + error.message, 'danger');
             }
             showLoading(false);
         }
@@ -734,6 +740,8 @@
         async function applyFilters() {
             const type = document.getElementById('filterType').value;
             const location = document.getElementById('filterLocation').value;
+
+            console.log('필터 적용:', { type, location });
 
             if (!type && !location) {
                 loadFestivals();
@@ -745,18 +753,24 @@
                 let url = '/api/festivals/filter?';
                 if (type) url += `infoType=${type}&`;
                 if (location) url += `locationTag=${location}&`;
-
+                
+                console.log('필터 URL:', url);
                 const response = await fetch(url);
+                console.log('필터 응답 상태:', response.status);
+                
                 if (response.ok) {
                     const filtered = await response.json();
+                    console.log('필터 결과:', filtered);
                     displayFestivals(filtered);
                     updateDashboard(filtered);
                 } else {
-                    showAlert('필터링에 실패했습니다.', 'danger');
+                    const errorText = await response.text();
+                    console.error('필터링 실패:', errorText);
+                    showAlert(`필터링에 실패했습니다: ${response.status}`, 'danger');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showAlert('네트워크 오류가 발생했습니다.', 'danger');
+                console.error('필터링 에러:', error);
+                showAlert('네트워크 오류가 발생했습니다: ' + error.message, 'danger');
             }
             showLoading(false);
         }

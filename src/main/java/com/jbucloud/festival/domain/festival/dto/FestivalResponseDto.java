@@ -40,7 +40,7 @@ public class FestivalResponseDto {
     
     @Schema(description = "상시 운영 여부", 
             example = "false")
-    private Boolean isAlwaysOpen;
+    private Boolean alwaysOpen;
     
     @Schema(description = "축제 상세 설명", 
             example = "당일 강수량에 따라 일부 프로그램이....")
@@ -87,7 +87,7 @@ public class FestivalResponseDto {
         this.preview = festival.getPreview();
         this.startTime = festival.getStartTime();
         this.endTime = festival.getEndTime();
-        this.isAlwaysOpen = festival.getIsAlwaysOpen();
+        this.alwaysOpen = festival.getIsAlwaysOpen();
         this.detailedDescription = festival.getDetailedDescription();
         this.locationTag = festival.getLocationTag();
         this.foodTruckMenus = festival.getFoodTruckMenus() != null ? 
