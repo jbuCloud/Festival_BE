@@ -1,8 +1,13 @@
 package com.jbucloud.festival.domain.quizgame.controller;
 
+import com.jbucloud.festival.domain.auth.dto.TokenDto;
+import com.jbucloud.festival.domain.member.entity.Member;
+import com.jbucloud.festival.domain.member.repository.MemberRepository;
 import com.jbucloud.festival.domain.quizgame.domain.GameType;
 import com.jbucloud.festival.domain.quizgame.domain.Question;
+import com.jbucloud.festival.domain.quizgame.dto.TestDto;
 import com.jbucloud.festival.domain.quizgame.repository.QuestionRepository;
+import com.jbucloud.festival.global.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +37,13 @@ public class AdminController {
     @Value("${firebase.service-account-file}")
     private String serviceAccountFile;
 
+    private final MemberRepository memberRepository;
+
     private final ResourceLoader resourceLoader;
 
     private final QuestionRepository questionRepository;
+
+    private final JwtUtil jwtUtil;
 
     @GetMapping
     public String adminPage() {
@@ -98,6 +107,29 @@ public class AdminController {
         Resource resource = resourceLoader.getResource("classpath:" + serviceAccountFile);
         String jsonContent = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
         log.info("Resource exists {}", jsonContent);
+    }
+
+    @GetMapping("/auth")
+    @ResponseBody
+    public ResponseEntity<TokenDto> getAuth(@RequestParam(value = "memberId", defaultValue = "1") Long memberId) {
+        TokenDto tokenDto = jwtUtil.generateTokens(memberId);
+        return ResponseEntity.ok(tokenDto);
+    }
+
+    @PostMapping("/tester")
+    @ResponseBody
+    public Long createTester(@RequestBody TestDto.CreateMemberRequest request) {
+        Member member = Member.builder()
+                .nickname(request.nickname())
+                .major(request.major())
+                .build();
+        return memberRepository.save(member).getId();
+    }
+
+    @GetMapping("/ping")
+    @ResponseBody
+    public String pingpong() {
+        return "Pong";
     }
 
 
