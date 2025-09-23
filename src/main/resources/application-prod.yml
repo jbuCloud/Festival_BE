@@ -4,6 +4,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+app:
+  cors:
+    allowed-origins: "https://www.중부대에서만남을추구하면안되는걸까.site"
 
   jpa:
     hibernate:
